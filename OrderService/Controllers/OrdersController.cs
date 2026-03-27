@@ -16,27 +16,19 @@ namespace OrderService.Controllers
             _publisher = new RabbitMQPublisher("localhost", "orders-queue");
         }
 
-        // GET endpoint to test connectivity
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(new { 
-                message = "Order Service is running", 
-                timestamp = DateTime.UtcNow 
-            });
+            return Ok("Order Service is running");
         }
 
         [HttpPost]
         public IActionResult CreateOrder([FromBody] Order order)
         {
             var message = JsonSerializer.Serialize(order);
-
             _publisher.Publish(message);
 
-            return Ok(new { 
-                message = "Order created and event published.", 
-                order = order 
-            });
+            return Ok("Order created and event published.");
         }
     }
 }
